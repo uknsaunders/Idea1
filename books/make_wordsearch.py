@@ -11,6 +11,8 @@ import random
 
 from reportlab.lib.colors import HexColor, black, white
 from reportlab.lib.units import inch
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 
 from wordsearch_themes import THEMES
@@ -24,16 +26,20 @@ W, H = 8.5 * inch, 11 * inch
 MARGIN = 0.75 * inch               # comfortably above KDP's 0.375in inside / 0.25in outside minimums
 DIRS = [(0, 1), (1, 0), (1, 1), (-1, 1)]  # right, down, diagonal down-right, diagonal up-right (no backwards words)
 OUT = pathlib.Path(__file__).parent / "out"
-FONT, BOLD = "Helvetica", "Helvetica-Bold"
+# KDP requires embedded fonts, so use TrueType files (Liberation Sans, SIL Open Font Licence) rather than built-in Helvetica
+FONT_DIR = "/usr/share/fonts/truetype/liberation/"
+pdfmetrics.registerFont(TTFont("Body", FONT_DIR + "LiberationSans-Regular.ttf"))
+pdfmetrics.registerFont(TTFont("Body-Bold", FONT_DIR + "LiberationSans-Bold.ttf"))
+FONT, BOLD = "Body", "Body-Bold"
 
 
 def unique(grid, words):
-    """True if every word occurs exactly once in any of the 8 directions (so solutions are unambiguous)."""
+    """True if every word occurs exactly once reading in the puzzle's forward directions (so solutions are unambiguous)."""
     lines = ["".join(row) for row in grid] + ["".join(grid[y][x] for y in range(SIZE)) for x in range(SIZE)]
     for d in range(-SIZE + 1, SIZE):
-        lines.append("".join(grid[y][y - d] for y in range(SIZE) if 0 <= y - d < SIZE))
-        lines.append("".join(grid[y][d + SIZE - 1 - y] for y in range(SIZE) if 0 <= d + SIZE - 1 - y < SIZE))
-    return all(sum(line.count(w) + line[::-1].count(w) for line in lines) == 1 for w in words)
+        lines.append("".join(grid[y][y - d] for y in range(SIZE) if 0 <= y - d < SIZE))  # down-right
+        lines.append("".join(grid[y][d + SIZE - 1 - y] for y in range(SIZE) if 0 <= d + SIZE - 1 - y < SIZE)[::-1])  # up-right
+    return all(sum(line.count(w) for line in lines) == 1 for w in words)
 
 
 def make_grid(words, rnd):
@@ -105,7 +111,7 @@ def draw_grid(c, grid, x0, y_top, cell, font_size, placed=None):
 
 def interior(puzzles):
     path = OUT / "wordsearch-interior.pdf"
-    c = canvas.Canvas(str(path), pagesize=(W, H))
+    c = canvas.Canvas(str(path), pagesize=(W, H), initialFontName=FONT)
     c.setTitle(TITLE)
     c.setAuthor(AUTHOR)
 
@@ -152,7 +158,10 @@ def interior(puzzles):
         y0 = top - SIZE * cell - 0.65 * inch
         colw = (W - 2 * MARGIN) / 3
         for i, wd in enumerate(sorted(display)):
-            c.drawString(MARGIN + (i % 3) * colw + 0.1 * inch, y0 - (i // 3) * 0.33 * inch, "□  " + wd)
+            x, y = MARGIN + (i % 3) * colw + 0.1 * inch, y0 - (i // 3) * 0.33 * inch
+            c.setLineWidth(1)
+            c.rect(x, y - 1, 11, 11)  # empty tick box
+            c.drawString(x + 18, y, wd)
         page_number(c, page)
         c.showPage()
         page += 1
@@ -185,7 +194,7 @@ def cover(pages):
     bleed, spine = 0.125 * inch, pages * 0.002252 * inch
     cw, ch = 2 * bleed + 2 * W + spine, 2 * bleed + H
     path = OUT / "wordsearch-cover.pdf"
-    c = canvas.Canvas(str(path), pagesize=(cw, ch))
+    c = canvas.Canvas(str(path), pagesize=(cw, ch), initialFontName=FONT)
     navy, sea, sand = HexColor("#16325c"), HexColor("#2f7fb5"), HexColor("#f3e3b5")
     c.setFillColor(navy)
     c.rect(0, 0, cw, ch, stroke=0, fill=1)
