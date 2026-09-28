@@ -13,4 +13,10 @@ window.SITE_CONFIG = {
   // Optional affiliate links shown as "Recommended" cards. Add as many as you like.
   // Example: { title: "Open a high-interest savings account", text: "Earn more on your savings.", url: "https://your-affiliate-link" }
   affiliates: [],
+
+  // ── Visitor stats (so you can see which experiments work) ──
+  // Cloudflare Web Analytics token (free, no cookies): dash.cloudflare.com → Analytics & Logs → Web Analytics
+  cloudflareToken: "",
+  // …or GoatCounter site code (free for personal use), e.g. "moneymath" for moneymath.goatcounter.com
+  goatcounter: "",
 };

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Emergency Fund Calculator — How Much Should I Save? | MoneyMath</title>
+<meta name="description" content="Free emergency fund calculator. Work out how big your rainy-day fund should be and how long it will take to build.">
+<link rel="canonical" href="https://uknsaunders.github.io/Idea1/emergency-fund-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Emergency Fund Calculator — How Much Should I Save?">
+<meta property="og:description" content="Free emergency fund calculator. Work out how big your rainy-day fund should be and how long it will take to build.">
+<meta property="og:url" content="https://uknsaunders.github.io/Idea1/emergency-fund-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💷</text></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Emergency Fund Calculator", "url": "https://uknsaunders.github.io/Idea1/emergency-fund-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Should I invest my emergency fund?", "acceptedAnswer": {"@type": "Answer", "text": "Generally no \u2014 its job is to be there when you need it, and investments can fall at exactly the wrong time."}}]}</script>
+</head>
+<body>
+<header class="site"><div class="wrap">
+<a class="brand" href="../">Money<span>Math</span></a>
+<label style="margin:0;font-weight:400">Currency <select id="currency" aria-label="Currency"></select></label>
+</div></header>
+<main class="wrap">
+<h1>Emergency Fund Calculator</h1>
+<p class="lede">Free emergency fund calculator. Work out how big your rainy-day fund should be and how long it will take to build.</p>
+<section class="card"><div class="grid"><div><label for="e">Essential monthly spending</label><input id="e" type="number" inputmode="decimal" step="any" value="1500"></div><div><label for="m">Months of cover</label><input id="m" type="number" inputmode="decimal" step="1" value="4"></div><div><label for="h">Already saved</label><input id="h" type="number" inputmode="decimal" step="any" value="1000"></div><div><label for="s">Can save per month</label><input id="s" type="number" inputmode="decimal" step="any" value="200"></div></div><div class="results"><div class="stat"><div class="k">Target fund</div><div class="v" id="t">—</div></div><div class="stat"><div class="k">Still to save</div><div class="v" id="g">—</div></div><div class="stat"><div class="k">Time to reach it</div><div class="v" id="n">—</div></div></div></section>
+<div class="ad-slot"></div>
+<section class="card promo" id="promo" hidden></section>
+<article>
+<h2>How much emergency savings do you need?</h2>
+<p>A common rule is three to six months of <em>essential</em> spending — rent or mortgage, bills, food and transport, not your full lifestyle. Aim higher if you're self-employed, have one household income or work in an unstable industry.</p>
+<p>Keep it in an easy-access savings account: safe, separate from everyday spending and earning some interest.</p>
+</article>
+<h2>Frequently asked questions</h2>
+<details><summary>Should I invest my emergency fund?</summary><p>Generally no — its job is to be there when you need it, and investments can fall at exactly the wrong time.</p></details>
+<div class="ad-slot"></div>
+<h2>More free calculators</h2>
+<div class="tools"><a href="../compound-interest-calculator/"><strong>Compound Interest Calculator</strong><span>See how savings and investments grow with regular contributions.</span></a><a href="../mortgage-calculator/"><strong>Mortgage & Loan Repayment Calculator</strong><span>Monthly payments, total interest and the effect of overpaying.</span></a><a href="../savings-goal-calculator/"><strong>Savings Goal Calculator</strong><span>How much to save each month to hit a target by a deadline.</span></a><a href="../fire-calculator/"><strong>FIRE Calculator</strong><span>Your FI number and how many years until you can retire.</span></a><a href="../inflation-calculator/"><strong>Inflation Calculator</strong><span>What your money will be worth in the future.</span></a><a href="../percentage-calculator/"><strong>Percentage Calculator</strong><span>Percent of, what percent, and percentage change.</span></a><a href="../uk-take-home-pay-calculator/"><strong>UK Take-Home Pay Calculator (2026/27)</strong><span>Salary after income tax, NI and pension.</span></a><a href="../stamp-duty-calculator/"><strong>Stamp Duty Calculator</strong><span>SDLT for movers, first-time buyers and second homes.</span></a><a href="../credit-card-payoff-calculator/"><strong>Credit Card Payoff Calculator</strong><span>How long to clear a card balance and the interest cost.</span></a><a href="../debt-payoff-calculator/"><strong>Debt Payoff Calculator</strong><span>Compare snowball and avalanche debt strategies.</span></a><a href="../salary-converter/"><strong>Salary Converter</strong><span>Convert between hourly, daily, monthly and annual pay.</span></a><a href="../vat-calculator/"><strong>VAT Calculator</strong><span>Add or remove VAT at any rate.</span></a><a href="../pension-calculator/"><strong>Pension Calculator</strong><span>Estimate your pension pot at retirement.</span></a><a href="../investment-return-calculator/"><strong>Investment Return (CAGR) Calculator</strong><span>Total return, CAGR and doubling time.</span></a><a href="../profit-margin-calculator/"><strong>Profit Margin & Markup Calculator</strong><span>Profit, margin and markup from cost and price.</span></a><a href="../budget-calculator/"><strong>50/30/20 Budget Calculator</strong><span>Split income into needs, wants and savings.</span></a><a href="../freelance-rate-calculator/"><strong>Freelance Day Rate Calculator</strong><span>The day rate you need to hit your income target.</span></a></div>
+<script>document.addEventListener("DOMContentLoaded", () => {
+App.bind(() => {
+  const t = App.val("e") * App.val("m"), g = Math.max(0, t - App.val("h")), s = App.val("s");
+  App.set("t", App.money(t)); App.set("g", App.money(g));
+  const n = s > 0 ? Math.ceil(g / s) : Infinity;
+  App.set("n", g === 0 ? "Done!" : isFinite(n) ? `${Math.floor(n / 12)} yrs ${n % 12} mo` : "—");
+});
+});</script>
+</main>
+<footer class="site"><div class="wrap">
+<p><a href="../compound-interest-calculator/">Compound Interest Calculator</a> · <a href="../mortgage-calculator/">Mortgage & Loan Repayment Calculator</a> · <a href="../savings-goal-calculator/">Savings Goal Calculator</a> · <a href="../fire-calculator/">FIRE Calculator</a> · <a href="../inflation-calculator/">Inflation Calculator</a> · <a href="../percentage-calculator/">Percentage Calculator</a> · <a href="../uk-take-home-pay-calculator/">UK Take-Home Pay Calculator (2026/27)</a> · <a href="../stamp-duty-calculator/">Stamp Duty Calculator</a> · <a href="../credit-card-payoff-calculator/">Credit Card Payoff Calculator</a> · <a href="../debt-payoff-calculator/">Debt Payoff Calculator</a> · <a href="../salary-converter/">Salary Converter</a> · <a href="../vat-calculator/">VAT Calculator</a> · <a href="../pension-calculator/">Pension Calculator</a> · <a href="../investment-return-calculator/">Investment Return (CAGR) Calculator</a> · <a href="../profit-margin-calculator/">Profit Margin & Markup Calculator</a> · <a href="../budget-calculator/">50/30/20 Budget Calculator</a> · <a href="../emergency-fund-calculator/">Emergency Fund Calculator</a> · <a href="../freelance-rate-calculator/">Freelance Day Rate Calculator</a></p>
+<p>Calculations run entirely in your browser — nothing is stored or sent. Results are estimates for educational purposes, not financial advice. <a href="../privacy.html">Privacy</a></p>
+</div></footer>
+<script src="../assets/config.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

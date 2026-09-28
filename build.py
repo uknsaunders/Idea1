@@ -300,6 +300,424 @@ App.bind(() => {
 )
 
 
+# ── UK take-home pay ─────────────────────────────────────────
+page(
+    "uk-take-home-pay-calculator",
+    "UK Take-Home Pay Calculator 2026/27 — Salary After Tax & NI",
+    "UK Take-Home Pay Calculator (2026/27)",
+    "Free UK salary calculator for 2026/27. See your take-home pay after income tax, National Insurance and pension, per year, month and week.",
+    '<div class="grid">'
+    + field("g", "Annual salary (£)", 35000)
+    + field("p", "Pension contribution (% of salary)", 5)
+    + "</div>"
+    '<div class="results">' + stat("ny", "Take-home per year") + stat("nm", "Per month") + stat("nw", "Per week")
+    + stat("tx", "Income tax") + stat("ni", "National Insurance") + stat("pn", "Pension") + "</div>"
+    '<p class="note">England, Wales &amp; Northern Ireland rates. Pension treated as salary sacrifice. Excludes student loans and Scottish rates.</p>',
+    """
+App.bind(() => {
+  const G = App.val("g"), pen = G * App.val("p") / 100, adj = Math.max(0, G - pen);
+  const PA = Math.max(0, 12570 - Math.max(0, adj - 100000) / 2);
+  const T = Math.max(0, adj - PA);
+  const tax = Math.min(T, 37700) * 0.2 + Math.max(0, Math.min(T, 125140) - 37700) * 0.4 + Math.max(0, T - 125140) * 0.45;
+  const ni = Math.max(0, Math.min(adj, 50270) - 12570) * 0.08 + Math.max(0, adj - 50270) * 0.02;
+  const net = adj - tax - ni;
+  App.set("ny", App.money(net)); App.set("nm", App.money(net / 12, 2)); App.set("nw", App.money(net / 52, 2));
+  App.set("tx", App.money(tax)); App.set("ni", App.money(ni)); App.set("pn", App.money(pen));
+});
+""",
+    """
+<h2>How UK income tax works in 2026/27</h2>
+<ul>
+<li><strong>Personal allowance:</strong> the first £12,570 is tax-free. It shrinks by £1 for every £2 earned over £100,000, disappearing entirely at £125,140.</li>
+<li><strong>Basic rate (20%):</strong> the next £37,700 of taxable income.</li>
+<li><strong>Higher rate (40%):</strong> taxable income from £37,701 to £125,140.</li>
+<li><strong>Additional rate (45%):</strong> above £125,140.</li>
+</ul>
+<h2>National Insurance</h2>
+<p>Employees pay Class 1 NI of 8% on earnings between £12,570 and £50,270, and 2% above that.</p>
+<h2>The £100k tax trap</h2>
+<p>Between £100,000 and £125,140 you lose personal allowance as you earn more, creating an effective 60% tax rate (62% with NI). Pension contributions via salary sacrifice can bring income back below £100,000 — try it above.</p>
+""",
+    [
+        ("Does this include student loan repayments?", "No. Student loan repayments depend on your plan type and are deducted on top of the figures shown."),
+        ("Does it work for Scotland?", "No — Scotland has its own income tax bands. National Insurance is the same across the UK."),
+        ("What is salary sacrifice?", "You give up part of your salary in exchange for an employer pension contribution. It reduces both income tax and National Insurance."),
+    ],
+    "Salary after income tax, NI and pension.",
+)
+
+# ── Stamp duty ───────────────────────────────────────────────
+page(
+    "stamp-duty-calculator",
+    "Stamp Duty Calculator (SDLT) — England & Northern Ireland",
+    "Stamp Duty Calculator",
+    "Free Stamp Duty Land Tax (SDLT) calculator for England and Northern Ireland. Includes first-time buyer relief and the additional property surcharge.",
+    '<div class="grid">'
+    + field("v", "Property price (£)", 350000)
+    + '<div><label for="t">Buyer type</label><select class="field" id="t">'
+      '<option value="std">Moving home / standard</option><option value="ftb">First-time buyer</option>'
+      '<option value="add">Additional property / buy-to-let</option></select></div>'
+    + "</div>"
+    '<div class="results">' + stat("sd", "Stamp duty to pay") + stat("er", "Effective rate") + "</div>"
+    '<p class="note" id="nt"></p>'
+    '<div class="table-wrap"><table><thead><tr><th>Band</th><th>Rate</th><th>Tax</th></tr></thead><tbody id="rows"></tbody></table></div>',
+    """
+App.bind(() => {
+  const V = App.val("v"), t = document.getElementById("t").value;
+  let bands = [[125000, 0], [250000, 0.02], [925000, 0.05], [1500000, 0.10], [Infinity, 0.12]], note = "";
+  if (t === "ftb") {
+    if (V <= 500000) bands = [[300000, 0], [500000, 0.05]];
+    else note = "First-time buyer relief isn't available above £500,000, so standard rates apply.";
+  }
+  const extra = t === "add" ? 0.05 : 0;
+  if (t === "add") note = "Includes the 5% surcharge on additional properties. Purchases under £40,000 are exempt.";
+  let prev = 0, total = 0, rows = "";
+  for (const [top, rate] of bands) {
+    if (V <= prev) break;
+    const slice = Math.min(V, top) - prev, r = rate + extra, tax = slice * r;
+    total += tax;
+    rows += `<tr><td>${App.money(prev)} – ${top === Infinity ? "above" : App.money(top)}</td><td>${App.num(r * 100)}%</td><td>${App.money(tax)}</td></tr>`;
+    prev = top;
+  }
+  if (t === "add" && V < 40000) { total = 0; }
+  App.set("sd", App.money(total)); App.set("er", V ? `${App.num(total / V * 100, 2)}%` : "—");
+  App.set("nt", note); document.getElementById("rows").innerHTML = rows;
+});
+""",
+    """
+<h2>Stamp duty rates (from 1 April 2025)</h2>
+<table><thead><tr><th>Property price</th><th>Standard rate</th></tr></thead><tbody>
+<tr><td>Up to £125,000</td><td>0%</td></tr><tr><td>£125,001 – £250,000</td><td>2%</td></tr>
+<tr><td>£250,001 – £925,000</td><td>5%</td></tr><tr><td>£925,001 – £1.5 million</td><td>10%</td></tr>
+<tr><td>Above £1.5 million</td><td>12%</td></tr></tbody></table>
+<p><strong>First-time buyers</strong> pay 0% up to £300,000 and 5% from £300,001 to £500,000. Above £500,000, standard rates apply to the whole price.</p>
+<p><strong>Additional properties</strong> (second homes, buy-to-let) pay an extra 5% on every band.</p>
+<p>Scotland (LBTT) and Wales (LTT) have their own systems. Non-UK residents pay a further 2% surcharge, not included here.</p>
+""",
+    [
+        ("When do I pay stamp duty?", "Within 14 days of completion. Your solicitor or conveyancer normally handles it."),
+        ("Is stamp duty charged on the whole price?", "No — like income tax, each rate applies only to the portion of the price within that band."),
+    ],
+    "SDLT for movers, first-time buyers and second homes.",
+)
+
+# ── Credit card payoff ───────────────────────────────────────
+page(
+    "credit-card-payoff-calculator",
+    "Credit Card Payoff Calculator — How Long to Clear Your Balance",
+    "Credit Card Payoff Calculator",
+    "Free credit card payoff calculator. See how many months it takes to clear your balance and how much interest you'll pay at any monthly payment.",
+    '<div class="grid">'
+    + field("b", "Balance owed", 3000)
+    + field("r", "APR (%)", 24.9)
+    + field("m", "Monthly payment", 150)
+    + "</div>"
+    '<div class="results">' + stat("mo", "Time to pay off") + stat("ti", "Total interest") + stat("tp", "Total paid") + "</div>"
+    '<p class="note" id="nt"></p>',
+    """
+App.bind(() => {
+  const B = App.val("b"), i = Math.pow(1 + App.val("r") / 100, 1 / 12) - 1, M = App.val("m");
+  if (M <= B * i) {
+    App.set("mo", "Never"); App.set("ti", "—"); App.set("tp", "—");
+    App.set("nt", `Your payment doesn't cover the monthly interest (${App.money(B * i, 2)}). Pay more to reduce the balance.`);
+    return;
+  }
+  let bal = B, n = 0, int = 0;
+  while (bal > 0.005 && n < 1200) { const x = bal * i; int += x; bal = bal + x - M; n++; }
+  App.set("mo", `${Math.floor(n / 12)} yrs ${n % 12} mo`); App.set("ti", App.money(int)); App.set("tp", App.money(B + int));
+  App.set("nt", "Tip: moving the balance to a 0% balance-transfer card could save most of this interest.");
+});
+""",
+    """
+<h2>Why minimum payments cost so much</h2>
+<p>Credit card APRs are high, so when you only pay a little more than the interest each month, most of your payment never touches the balance. Increasing your payment even slightly can cut years off the debt.</p>
+<h2>Ways to pay off faster</h2>
+<ul><li>Pay a fixed amount rather than the shrinking minimum.</li><li>Consider a 0% balance transfer card (watch the transfer fee and the end date).</li><li>With several debts, use our debt payoff calculator to compare snowball and avalanche strategies.</li></ul>
+""",
+    [
+        ("How is monthly interest calculated from APR?", "This calculator converts the APR to an equivalent monthly rate. Card issuers' exact methods vary slightly (e.g. daily balances), so treat results as close estimates."),
+    ],
+    "How long to clear a card balance and the interest cost.",
+)
+
+# ── Debt snowball vs avalanche ───────────────────────────────
+_debt_rows = "".join(
+    f'<div class="grid" style="margin-bottom:10px">{field(f"b{k}", f"Debt {k} balance", b)}{field(f"r{k}", "APR (%)", r)}{field(f"m{k}", "Minimum payment", m)}</div>'
+    for k, (b, r, m) in enumerate([(2500, 22.9, 60), (6000, 9.9, 150), (800, 12.9, 25), (0, 0, 0)], 1))
+page(
+    "debt-payoff-calculator",
+    "Debt Payoff Calculator — Snowball vs Avalanche",
+    "Debt Payoff Calculator: Snowball vs Avalanche",
+    "Free debt payoff calculator comparing the snowball and avalanche methods. Enter up to four debts and an extra monthly payment to see your debt-free date.",
+    _debt_rows + '<div class="grid">' + field("x", "Extra payment per month", 100) + "</div>"
+    '<div class="results">' + stat("am", "Avalanche: debt-free in") + stat("ai", "Avalanche: interest")
+    + stat("sm", "Snowball: debt-free in") + stat("si", "Snowball: interest") + "</div>"
+    '<p class="note" id="nt"></p>',
+    """
+function sim(debts, extra, order) {
+  debts = debts.map((d) => ({ ...d })); let n = 0, int = 0;
+  while (debts.some((d) => d.b > 0.005) && n < 1200) {
+    let pool = extra;
+    debts.forEach((d) => { if (d.b > 0) { const x = d.b * d.i; d.b += x; int += x; } });
+    debts.forEach((d) => { if (d.b > 0) { const p = Math.min(d.b, d.m); d.b -= p; pool += d.m - p; } else pool += d.m; });
+    debts.filter((d) => d.b > 0).sort(order).forEach((d) => { const p = Math.min(d.b, pool); d.b -= p; pool -= p; });
+    n++;
+  }
+  return { n, int };
+}
+App.bind(() => {
+  const debts = [1, 2, 3, 4].map((k) => ({ b: App.val("b" + k), i: App.val("r" + k) / 100 / 12, m: App.val("m" + k) })).filter((d) => d.b > 0);
+  const fmt = (n) => n >= 1200 ? "Never" : `${Math.floor(n / 12)} yrs ${n % 12} mo`;
+  const a = sim(debts, App.val("x"), (p, q) => q.i - p.i), s = sim(debts, App.val("x"), (p, q) => p.b - q.b);
+  App.set("am", fmt(a.n)); App.set("ai", App.money(a.int)); App.set("sm", fmt(s.n)); App.set("si", App.money(s.int));
+  App.set("nt", a.n >= 1200 ? "Payments don't cover the interest — increase your extra payment." :
+    `Avalanche saves ${App.money(Math.max(0, s.int - a.int))} in interest; snowball clears your first debt sooner, which many people find motivating.`);
+});
+""",
+    """
+<h2>Snowball vs avalanche</h2>
+<p>Both methods pay the minimum on every debt and put all spare money toward one target debt. When it's cleared, its payment rolls onto the next — so your payments "snowball".</p>
+<ul><li><strong>Avalanche:</strong> target the highest interest rate first. Mathematically cheapest.</li>
+<li><strong>Snowball:</strong> target the smallest balance first. Quick wins keep you motivated.</li></ul>
+<p>The best method is the one you'll stick with. The difference is often smaller than people expect.</p>
+""",
+    [
+        ("Should I save or pay off debt first?", "Most guidance suggests a small emergency fund first, then attacking high-interest debt, since card interest usually exceeds what savings earn."),
+    ],
+    "Compare snowball and avalanche debt strategies.",
+)
+
+# ── Salary converter ─────────────────────────────────────────
+page(
+    "salary-converter",
+    "Salary Converter — Hourly, Daily, Weekly, Monthly & Annual Pay",
+    "Salary Converter",
+    "Free salary converter. Turn an hourly rate into an annual salary or vice versa, and see daily, weekly and monthly equivalents.",
+    '<div class="grid">'
+    + field("a", "Amount", 15)
+    + '<div><label for="per">Per</label><select class="field" id="per"><option value="h" selected>Hour</option><option value="d">Day</option>'
+      '<option value="w">Week</option><option value="m">Month</option><option value="y">Year</option></select></div>'
+    + field("h", "Hours per week", 37.5)
+    + field("wk", "Weeks worked per year", 52)
+    + "</div>"
+    '<div class="results">' + stat("oh", "Hourly") + stat("od", "Daily") + stat("ow", "Weekly") + stat("om", "Monthly") + stat("oy", "Annual") + "</div>",
+    """
+App.bind(() => {
+  const a = App.val("a"), h = App.val("h") || 1, wk = App.val("wk") || 1, per = document.getElementById("per").value;
+  const yearly = { h: a * h * wk, d: a * 5 * wk, w: a * wk, m: a * 12, y: a }[per];
+  App.set("oh", App.money(yearly / wk / h, 2)); App.set("od", App.money(yearly / wk / 5, 2));
+  App.set("ow", App.money(yearly / wk, 2)); App.set("om", App.money(yearly / 12, 2)); App.set("oy", App.money(yearly));
+});
+""",
+    """
+<h2>How the conversion works</h2>
+<p>Annual pay = hourly rate × hours per week × weeks per year. A standard UK full-time week is 37.5 hours. If you're paid for holidays, keep weeks at 52; if you're self-employed and unpaid on holiday, reduce it (e.g. 46–48).</p>
+<p>These are gross (before tax) figures. For pay after tax, use the UK take-home pay calculator.</p>
+""",
+    [("How many working days are in a year?", "About 260 weekdays; roughly 252 after UK bank holidays, and fewer again after annual leave.")],
+    "Convert between hourly, daily, monthly and annual pay.",
+)
+
+# ── VAT ──────────────────────────────────────────────────────
+page(
+    "vat-calculator",
+    "VAT Calculator — Add or Remove VAT at 20%",
+    "VAT Calculator",
+    "Free VAT calculator. Add VAT to a net price or remove VAT from a gross price at 20% or any custom rate.",
+    '<div class="grid">' + field("a", "Amount", 100) + field("r", "VAT rate (%)", 20) + "</div>"
+    '<h2>Adding VAT</h2><div class="results">' + stat("ag", "Price including VAT") + stat("av", "VAT added") + "</div>"
+    '<h2>Removing VAT</h2><div class="results">' + stat("rn", "Price excluding VAT") + stat("rv", "VAT included") + "</div>",
+    """
+App.bind(() => {
+  const a = App.val("a"), r = App.val("r") / 100;
+  App.set("ag", App.money(a * (1 + r), 2)); App.set("av", App.money(a * r, 2));
+  App.set("rn", App.money(a / (1 + r), 2)); App.set("rv", App.money(a - a / (1 + r), 2));
+});
+""",
+    """
+<h2>VAT formulas</h2>
+<ul><li><strong>Add VAT:</strong> gross = net × 1.2 (at 20%)</li><li><strong>Remove VAT:</strong> net = gross ÷ 1.2 — not gross × 0.8, a common mistake.</li></ul>
+<p>UK rates: standard 20%, reduced 5% (e.g. home energy, children's car seats), zero 0% (most food, books, children's clothes).</p>
+""",
+    [("Why isn't removing 20% VAT the same as taking 20% off?", "Because VAT is 20% of the net price, not the gross. £120 including VAT is £100 net, not £96.")],
+    "Add or remove VAT at any rate.",
+)
+
+# ── Pension pot ──────────────────────────────────────────────
+page(
+    "pension-calculator",
+    "Pension Calculator — How Big Will My Pension Pot Be?",
+    "Pension Calculator",
+    "Free pension calculator. Estimate your pension pot at retirement from your contributions, your employer's and investment growth, in today's money.",
+    '<div class="grid">'
+    + field("age", "Current age", 30, step="1")
+    + field("ret", "Retirement age", 67, step="1")
+    + field("pot", "Current pension pot", 15000)
+    + field("sal", "Salary", 35000)
+    + field("you", "Your contribution (%)", 5)
+    + field("emp", "Employer contribution (%)", 3)
+    + field("r", "Real investment return (%)", 4)
+    + "</div>"
+    '<div class="results">' + stat("fp", "Pot at retirement (today's money)") + stat("inc", "Annual income at 4% withdrawal") + stat("tc", "Total contributions") + "</div>"
+    '<div class="chart" id="chart"></div>',
+    """
+App.bind(() => {
+  const yrs = Math.max(0, Math.round(App.val("ret") - App.val("age"))), r = App.val("r") / 100;
+  const add = App.val("sal") * (App.val("you") + App.val("emp")) / 100;
+  let bal = App.val("pot"), paid = App.val("pot"); const L = [], C = [], G = [];
+  for (let y = 1; y <= yrs; y++) { bal = bal * (1 + r) + add; paid += add; L.push(App.val("age") + y); C.push(paid); G.push(bal - paid); }
+  App.set("fp", App.money(bal)); App.set("inc", App.money(bal * 0.04)); App.set("tc", App.money(paid));
+  App.chart(document.getElementById("chart"), L, [
+    { label: "Contributions", color: "var(--accent-2)", values: C },
+    { label: "Growth", color: "var(--accent)", values: G },
+  ]);
+});
+""",
+    """
+<h2>How this estimate works</h2>
+<p>Each year, your pot grows by the real (after-inflation) return, and your and your employer's contributions are added. Using a real return keeps the result in today's money, so you can compare it with today's prices.</p>
+<h2>Boosting your pension</h2>
+<ul><li>Ask whether your employer matches extra contributions — it's free money.</li><li>Pension contributions get tax relief, so £80 from your pocket can become £100 in your pension (or more for higher-rate taxpayers).</li><li>Check fees: a 1% annual charge can reduce your final pot by a fifth or more.</li></ul>
+<p>Most people will also get a State Pension on top, depending on their National Insurance record.</p>
+""",
+    [("What return should I assume?", "Many planners use 3–5% above inflation for a stock-heavy portfolio, lower for cautious funds. Returns aren't guaranteed.")],
+    "Estimate your pension pot at retirement.",
+)
+
+# ── Investment return / CAGR ─────────────────────────────────
+page(
+    "investment-return-calculator",
+    "Investment Return Calculator — CAGR & Annualised Return",
+    "Investment Return (CAGR) Calculator",
+    "Free investment return calculator. Work out your total return, compound annual growth rate (CAGR) and how long money takes to double.",
+    '<div class="grid">' + field("s", "Starting value", 10000) + field("e", "Ending value", 18000) + field("y", "Years held", 6) + "</div>"
+    '<div class="results">' + stat("tr", "Total return") + stat("cg", "Annualised return (CAGR)") + stat("db", "Years to double at this rate") + "</div>",
+    """
+App.bind(() => {
+  const s = App.val("s"), e = App.val("e"), y = App.val("y");
+  if (s <= 0 || y <= 0) return;
+  const cagr = Math.pow(e / s, 1 / y) - 1;
+  App.set("tr", `${App.num((e / s - 1) * 100, 2)}%`); App.set("cg", `${App.num(cagr * 100, 2)}%`);
+  App.set("db", cagr > 0 ? `${App.num(Math.log(2) / Math.log(1 + cagr), 1)} years` : "—");
+});
+""",
+    """
+<h2>What is CAGR?</h2>
+<p>The compound annual growth rate is the steady yearly return that would turn your starting value into your ending value. Formula: <code>CAGR = (end ÷ start)<sup>1/years</sup> − 1</code>. It smooths out ups and downs so you can compare investments held for different lengths of time.</p>
+<h2>The rule of 72</h2>
+<p>A quick shortcut: divide 72 by the annual return to estimate years to double. At 8%, money doubles in about 9 years.</p>
+""",
+    [("Should I include dividends?", "Yes — for a true total return, use an ending value that includes reinvested dividends or interest.")],
+    "Total return, CAGR and doubling time.",
+)
+
+# ── Profit margin ────────────────────────────────────────────
+page(
+    "profit-margin-calculator",
+    "Profit Margin & Markup Calculator",
+    "Profit Margin & Markup Calculator",
+    "Free profit margin calculator. Work out profit, margin and markup from cost and price, or the selling price needed for a target margin.",
+    '<div class="grid">' + field("c", "Cost", 40) + field("p", "Selling price", 60) + "</div>"
+    '<div class="results">' + stat("pr", "Profit") + stat("mg", "Margin") + stat("mk", "Markup") + "</div>"
+    '<h2>Price for a target margin</h2><div class="grid">' + field("tm", "Target margin (%)", 40) + "</div>"
+    '<div class="results">' + stat("tp", "Selling price needed") + "</div>",
+    """
+App.bind(() => {
+  const c = App.val("c"), p = App.val("p"), tm = App.val("tm") / 100;
+  App.set("pr", App.money(p - c, 2));
+  App.set("mg", p ? `${App.num((p - c) / p * 100, 2)}%` : "—");
+  App.set("mk", c ? `${App.num((p - c) / c * 100, 2)}%` : "—");
+  App.set("tp", tm < 1 ? App.money(c / (1 - tm), 2) : "—");
+});
+""",
+    """
+<h2>Margin vs markup</h2>
+<ul><li><strong>Margin</strong> = profit ÷ selling price. A £60 item costing £40 has a 33.3% margin.</li>
+<li><strong>Markup</strong> = profit ÷ cost. The same item has a 50% markup.</li></ul>
+<p>Confusing the two is a classic pricing mistake: adding a 40% markup does <em>not</em> give a 40% margin. To hit a target margin, price = cost ÷ (1 − margin).</p>
+""",
+    [("What's a good profit margin?", "It varies hugely by industry — from a few percent in groceries to 70%+ for software and digital products.")],
+    "Profit, margin and markup from cost and price.",
+)
+
+# ── 50/30/20 budget ──────────────────────────────────────────
+page(
+    "budget-calculator",
+    "50/30/20 Budget Calculator — Split Your Monthly Income",
+    "50/30/20 Budget Calculator",
+    "Free 50/30/20 budget calculator. Split your monthly take-home pay into needs, wants and savings — or set your own percentages.",
+    '<div class="grid">' + field("i", "Monthly take-home pay", 2500) + field("n", "Needs (%)", 50) + field("w", "Wants (%)", 30) + field("s", "Savings & debt (%)", 20) + "</div>"
+    '<div class="results">' + stat("on", "Needs") + stat("ow", "Wants") + stat("os", "Savings & debt repayment") + "</div>"
+    '<p class="note" id="nt"></p>',
+    """
+App.bind(() => {
+  const i = App.val("i"), n = App.val("n"), w = App.val("w"), s = App.val("s");
+  App.set("on", App.money(i * n / 100)); App.set("ow", App.money(i * w / 100)); App.set("os", App.money(i * s / 100));
+  App.set("nt", n + w + s === 100 ? `That's ${App.money(i * s / 100 * 12)} a year towards savings and debt.` : `Your percentages add up to ${n + w + s}% — adjust them to total 100%.`);
+});
+""",
+    """
+<h2>The 50/30/20 rule</h2>
+<ul><li><strong>50% needs:</strong> rent or mortgage, bills, food, transport, minimum debt payments.</li>
+<li><strong>30% wants:</strong> eating out, hobbies, subscriptions, holidays.</li>
+<li><strong>20% savings:</strong> emergency fund, pension, investing and extra debt payments.</li></ul>
+<p>In high-cost areas, needs often exceed 50% — a 60/20/20 or 70/20/10 split is fine. The point is to decide in advance where your money goes.</p>
+""",
+    [("Is 50/30/20 based on gross or net income?", "Net — your take-home pay after tax, NI and pension contributions.")],
+    "Split income into needs, wants and savings.",
+)
+
+# ── Emergency fund ───────────────────────────────────────────
+page(
+    "emergency-fund-calculator",
+    "Emergency Fund Calculator — How Much Should I Save?",
+    "Emergency Fund Calculator",
+    "Free emergency fund calculator. Work out how big your rainy-day fund should be and how long it will take to build.",
+    '<div class="grid">' + field("e", "Essential monthly spending", 1500) + field("m", "Months of cover", 4, step="1")
+    + field("h", "Already saved", 1000) + field("s", "Can save per month", 200) + "</div>"
+    '<div class="results">' + stat("t", "Target fund") + stat("g", "Still to save") + stat("n", "Time to reach it") + "</div>",
+    """
+App.bind(() => {
+  const t = App.val("e") * App.val("m"), g = Math.max(0, t - App.val("h")), s = App.val("s");
+  App.set("t", App.money(t)); App.set("g", App.money(g));
+  const n = s > 0 ? Math.ceil(g / s) : Infinity;
+  App.set("n", g === 0 ? "Done!" : isFinite(n) ? `${Math.floor(n / 12)} yrs ${n % 12} mo` : "—");
+});
+""",
+    """
+<h2>How much emergency savings do you need?</h2>
+<p>A common rule is three to six months of <em>essential</em> spending — rent or mortgage, bills, food and transport, not your full lifestyle. Aim higher if you're self-employed, have one household income or work in an unstable industry.</p>
+<p>Keep it in an easy-access savings account: safe, separate from everyday spending and earning some interest.</p>
+""",
+    [("Should I invest my emergency fund?", "Generally no — its job is to be there when you need it, and investments can fall at exactly the wrong time.")],
+    "How big your rainy-day fund should be.",
+)
+
+# ── Freelance day rate ───────────────────────────────────────
+page(
+    "freelance-rate-calculator",
+    "Freelance Day Rate Calculator — What Should I Charge?",
+    "Freelance Day Rate Calculator",
+    "Free freelance rate calculator. Work out the day rate and hourly rate you need to charge to hit your target income after expenses and time off.",
+    '<div class="grid">' + field("t", "Target annual income (before tax)", 45000) + field("x", "Annual business expenses", 3000)
+    + field("hol", "Weeks off per year (holiday, sickness)", 7) + field("u", "Billable share of working days (%)", 70) + field("h", "Hours per day", 7.5) + "</div>"
+    '<div class="results">' + stat("dr", "Day rate") + stat("hr", "Hourly rate") + stat("bd", "Billable days per year") + "</div>",
+    """
+App.bind(() => {
+  const days = Math.max(1, (52 - App.val("hol")) * 5 * App.val("u") / 100), need = App.val("t") + App.val("x");
+  App.set("dr", App.money(need / days)); App.set("hr", App.money(need / days / (App.val("h") || 1), 2)); App.set("bd", App.num(days, 0));
+});
+""",
+    """
+<h2>Why freelance rates look high</h2>
+<p>Employees are paid for holidays, sick days and admin time, and their employer covers equipment, pension and NI. As a freelancer you fund all of that yourself, and not every working day is billable — you'll spend time finding clients, invoicing and learning.</p>
+<p>That's why a freelancer typically needs a day rate of roughly 1/200th to 1/150th of an equivalent salary.</p>
+""",
+    [("What billable percentage is realistic?", "Many freelancers bill 60–75% of working days; newer freelancers often less while building a client base.")],
+    "The day rate you need to hit your income target.",
+)
+
+
 # ── Rendering ────────────────────────────────────────────────
 def layout(title, description, path, body, extra_head=""):
     canonical = f"{SITE_URL}/{path}"
@@ -382,11 +800,12 @@ def build():
 <h2>Why MoneyMath?</h2>
 <p>Most financial calculators are buried under pop-ups or ask for your email. These don't. Pick a calculator, change the numbers, and the results update instantly — with charts and year-by-year breakdowns where they help.</p>"""
     (OUT / "index.html").write_text(layout(f"{SITE_NAME} — Free Finance Calculators",
-                                           "Free, private finance calculators: compound interest, mortgage, savings goal, FIRE retirement, inflation and percentages. No sign-up.",
+                                           "Free, private finance calculators: UK take-home pay, stamp duty, mortgage, compound interest, pension, debt payoff, budgeting and more. No sign-up.",
                                            "", home))
 
     privacy = """<h1>Privacy</h1>
 <p>All calculations happen in your browser. We don't collect, store or transmit the numbers you enter.</p>
+<p>We may count anonymous page visits with a cookie-free analytics service (Cloudflare Web Analytics or GoatCounter) to see which pages are useful. No personal data is collected.</p>
 <p>Your currency choice is saved in your browser's local storage so it's remembered next visit.</p>
 <p>This site may show adverts from Google AdSense. Google and its partners may use cookies to serve ads based on your visits to this and other websites. You can opt out of personalised advertising at <a href="https://adssettings.google.com">Google Ads Settings</a>. See <a href="https://policies.google.com/technologies/partner-sites">how Google uses data from partner sites</a>.</p>
 <p>Some links may be affiliate links, meaning we may earn a commission at no extra cost to you.</p>"""

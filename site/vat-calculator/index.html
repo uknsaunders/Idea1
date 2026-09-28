@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VAT Calculator — Add or Remove VAT at 20% | MoneyMath</title>
+<meta name="description" content="Free VAT calculator. Add VAT to a net price or remove VAT from a gross price at 20% or any custom rate.">
+<link rel="canonical" href="https://uknsaunders.github.io/Idea1/vat-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="VAT Calculator — Add or Remove VAT at 20%">
+<meta property="og:description" content="Free VAT calculator. Add VAT to a net price or remove VAT from a gross price at 20% or any custom rate.">
+<meta property="og:url" content="https://uknsaunders.github.io/Idea1/vat-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💷</text></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "VAT Calculator", "url": "https://uknsaunders.github.io/Idea1/vat-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why isn't removing 20% VAT the same as taking 20% off?", "acceptedAnswer": {"@type": "Answer", "text": "Because VAT is 20% of the net price, not the gross. \u00a3120 including VAT is \u00a3100 net, not \u00a396."}}]}</script>
+</head>
+<body>
+<header class="site"><div class="wrap">
+<a class="brand" href="../">Money<span>Math</span></a>
+<label style="margin:0;font-weight:400">Currency <select id="currency" aria-label="Currency"></select></label>
+</div></header>
+<main class="wrap">
+<h1>VAT Calculator</h1>
+<p class="lede">Free VAT calculator. Add VAT to a net price or remove VAT from a gross price at 20% or any custom rate.</p>
+<section class="card"><div class="grid"><div><label for="a">Amount</label><input id="a" type="number" inputmode="decimal" step="any" value="100"></div><div><label for="r">VAT rate (%)</label><input id="r" type="number" inputmode="decimal" step="any" value="20"></div></div><h2>Adding VAT</h2><div class="results"><div class="stat"><div class="k">Price including VAT</div><div class="v" id="ag">—</div></div><div class="stat"><div class="k">VAT added</div><div class="v" id="av">—</div></div></div><h2>Removing VAT</h2><div class="results"><div class="stat"><div class="k">Price excluding VAT</div><div class="v" id="rn">—</div></div><div class="stat"><div class="k">VAT included</div><div class="v" id="rv">—</div></div></div></section>
+<div class="ad-slot"></div>
+<section class="card promo" id="promo" hidden></section>
+<article>
+<h2>VAT formulas</h2>
+<ul><li><strong>Add VAT:</strong> gross = net × 1.2 (at 20%)</li><li><strong>Remove VAT:</strong> net = gross ÷ 1.2 — not gross × 0.8, a common mistake.</li></ul>
+<p>UK rates: standard 20%, reduced 5% (e.g. home energy, children's car seats), zero 0% (most food, books, children's clothes).</p>
+</article>
+<h2>Frequently asked questions</h2>
+<details><summary>Why isn&#x27;t removing 20% VAT the same as taking 20% off?</summary><p>Because VAT is 20% of the net price, not the gross. £120 including VAT is £100 net, not £96.</p></details>
+<div class="ad-slot"></div>
+<h2>More free calculators</h2>
+<div class="tools"><a href="../compound-interest-calculator/"><strong>Compound Interest Calculator</strong><span>See how savings and investments grow with regular contributions.</span></a><a href="../mortgage-calculator/"><strong>Mortgage & Loan Repayment Calculator</strong><span>Monthly payments, total interest and the effect of overpaying.</span></a><a href="../savings-goal-calculator/"><strong>Savings Goal Calculator</strong><span>How much to save each month to hit a target by a deadline.</span></a><a href="../fire-calculator/"><strong>FIRE Calculator</strong><span>Your FI number and how many years until you can retire.</span></a><a href="../inflation-calculator/"><strong>Inflation Calculator</strong><span>What your money will be worth in the future.</span></a><a href="../percentage-calculator/"><strong>Percentage Calculator</strong><span>Percent of, what percent, and percentage change.</span></a><a href="../uk-take-home-pay-calculator/"><strong>UK Take-Home Pay Calculator (2026/27)</strong><span>Salary after income tax, NI and pension.</span></a><a href="../stamp-duty-calculator/"><strong>Stamp Duty Calculator</strong><span>SDLT for movers, first-time buyers and second homes.</span></a><a href="../credit-card-payoff-calculator/"><strong>Credit Card Payoff Calculator</strong><span>How long to clear a card balance and the interest cost.</span></a><a href="../debt-payoff-calculator/"><strong>Debt Payoff Calculator</strong><span>Compare snowball and avalanche debt strategies.</span></a><a href="../salary-converter/"><strong>Salary Converter</strong><span>Convert between hourly, daily, monthly and annual pay.</span></a><a href="../pension-calculator/"><strong>Pension Calculator</strong><span>Estimate your pension pot at retirement.</span></a><a href="../investment-return-calculator/"><strong>Investment Return (CAGR) Calculator</strong><span>Total return, CAGR and doubling time.</span></a><a href="../profit-margin-calculator/"><strong>Profit Margin & Markup Calculator</strong><span>Profit, margin and markup from cost and price.</span></a><a href="../budget-calculator/"><strong>50/30/20 Budget Calculator</strong><span>Split income into needs, wants and savings.</span></a><a href="../emergency-fund-calculator/"><strong>Emergency Fund Calculator</strong><span>How big your rainy-day fund should be.</span></a><a href="../freelance-rate-calculator/"><strong>Freelance Day Rate Calculator</strong><span>The day rate you need to hit your income target.</span></a></div>
+<script>document.addEventListener("DOMContentLoaded", () => {
+App.bind(() => {
+  const a = App.val("a"), r = App.val("r") / 100;
+  App.set("ag", App.money(a * (1 + r), 2)); App.set("av", App.money(a * r, 2));
+  App.set("rn", App.money(a / (1 + r), 2)); App.set("rv", App.money(a - a / (1 + r), 2));
+});
+});</script>
+</main>
+<footer class="site"><div class="wrap">
+<p><a href="../compound-interest-calculator/">Compound Interest Calculator</a> · <a href="../mortgage-calculator/">Mortgage & Loan Repayment Calculator</a> · <a href="../savings-goal-calculator/">Savings Goal Calculator</a> · <a href="../fire-calculator/">FIRE Calculator</a> · <a href="../inflation-calculator/">Inflation Calculator</a> · <a href="../percentage-calculator/">Percentage Calculator</a> · <a href="../uk-take-home-pay-calculator/">UK Take-Home Pay Calculator (2026/27)</a> · <a href="../stamp-duty-calculator/">Stamp Duty Calculator</a> · <a href="../credit-card-payoff-calculator/">Credit Card Payoff Calculator</a> · <a href="../debt-payoff-calculator/">Debt Payoff Calculator</a> · <a href="../salary-converter/">Salary Converter</a> · <a href="../vat-calculator/">VAT Calculator</a> · <a href="../pension-calculator/">Pension Calculator</a> · <a href="../investment-return-calculator/">Investment Return (CAGR) Calculator</a> · <a href="../profit-margin-calculator/">Profit Margin & Markup Calculator</a> · <a href="../budget-calculator/">50/30/20 Budget Calculator</a> · <a href="../emergency-fund-calculator/">Emergency Fund Calculator</a> · <a href="../freelance-rate-calculator/">Freelance Day Rate Calculator</a></p>
+<p>Calculations run entirely in your browser — nothing is stored or sent. Results are estimates for educational purposes, not financial advice. <a href="../privacy.html">Privacy</a></p>
+</div></footer>
+<script src="../assets/config.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

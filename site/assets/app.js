@@ -96,6 +96,21 @@
 
     // Monetisation — each piece only appears once configured in config.js
     const cfg = window.SITE_CONFIG || {};
+    const addScript = (src, attrs) => {
+      const s = document.createElement("script");
+      s.defer = true;
+      s.src = src;
+      Object.entries(attrs || {}).forEach(([k, v]) => s.setAttribute(k, v));
+      document.head.appendChild(s);
+    };
+    if (cfg.cloudflareToken) addScript("https://static.cloudflareinsights.com/beacon.min.js", { "data-cf-beacon": JSON.stringify({ token: cfg.cloudflareToken }) });
+    if (cfg.goatcounter) addScript("https://gc.zgo.at/count.js", { "data-goatcounter": `https://${cfg.goatcounter}.goatcounter.com/count` });
+    // Count clicks on money links (tips/affiliates) as GoatCounter events
+    document.addEventListener("click", (e) => {
+      const a = e.target.closest && e.target.closest("a[data-track]");
+      if (a && window.goatcounter && window.goatcounter.count)
+        window.goatcounter.count({ path: "click-" + a.dataset.track, title: a.href, event: true });
+    });
     if (cfg.adsenseClient) {
       const s = document.createElement("script");
       s.async = true;
@@ -112,11 +127,11 @@
       let html = "";
       if (cfg.affiliates && cfg.affiliates.length) {
         html += `<h2 style="margin-top:0">Recommended</h2><div class="aff">` +
-          cfg.affiliates.map((a) => `<a href="${a.url}" rel="sponsored noopener" target="_blank"><strong>${a.title}</strong><br><span class="note">${a.text || ""}</span></a>`).join("") +
+          cfg.affiliates.map((a) => `<a data-track="affiliate-${encodeURIComponent(a.title)}" href="${a.url}" rel="sponsored noopener" target="_blank"><strong>${a.title}</strong><br><span class="note">${a.text || ""}</span></a>`).join("") +
           `</div>`;
       }
       if (cfg.tipUrl) {
-        html += `<p style="margin-bottom:0">Found this calculator useful? It's free and ad-light thanks to supporters. <a class="btn" href="${cfg.tipUrl}" target="_blank" rel="noopener">☕ Buy me a coffee</a></p>`;
+        html += `<p style="margin-bottom:0">Found this calculator useful? It's free and ad-light thanks to supporters. <a class="btn" data-track="tip" href="${cfg.tipUrl}" target="_blank" rel="noopener">☕ Buy me a coffee</a></p>`;
       }
       promo.innerHTML = html;
       promo.hidden = false;

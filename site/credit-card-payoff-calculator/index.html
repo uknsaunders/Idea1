@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Credit Card Payoff Calculator — How Long to Clear Your Balance | MoneyMath</title>
+<meta name="description" content="Free credit card payoff calculator. See how many months it takes to clear your balance and how much interest you&#x27;ll pay at any monthly payment.">
+<link rel="canonical" href="https://uknsaunders.github.io/Idea1/credit-card-payoff-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Credit Card Payoff Calculator — How Long to Clear Your Balance">
+<meta property="og:description" content="Free credit card payoff calculator. See how many months it takes to clear your balance and how much interest you&#x27;ll pay at any monthly payment.">
+<meta property="og:url" content="https://uknsaunders.github.io/Idea1/credit-card-payoff-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💷</text></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Credit Card Payoff Calculator", "url": "https://uknsaunders.github.io/Idea1/credit-card-payoff-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How is monthly interest calculated from APR?", "acceptedAnswer": {"@type": "Answer", "text": "This calculator converts the APR to an equivalent monthly rate. Card issuers' exact methods vary slightly (e.g. daily balances), so treat results as close estimates."}}]}</script>
+</head>
+<body>
+<header class="site"><div class="wrap">
+<a class="brand" href="../">Money<span>Math</span></a>
+<label style="margin:0;font-weight:400">Currency <select id="currency" aria-label="Currency"></select></label>
+</div></header>
+<main class="wrap">
+<h1>Credit Card Payoff Calculator</h1>
+<p class="lede">Free credit card payoff calculator. See how many months it takes to clear your balance and how much interest you&#x27;ll pay at any monthly payment.</p>
+<section class="card"><div class="grid"><div><label for="b">Balance owed</label><input id="b" type="number" inputmode="decimal" step="any" value="3000"></div><div><label for="r">APR (%)</label><input id="r" type="number" inputmode="decimal" step="any" value="24.9"></div><div><label for="m">Monthly payment</label><input id="m" type="number" inputmode="decimal" step="any" value="150"></div></div><div class="results"><div class="stat"><div class="k">Time to pay off</div><div class="v" id="mo">—</div></div><div class="stat"><div class="k">Total interest</div><div class="v" id="ti">—</div></div><div class="stat"><div class="k">Total paid</div><div class="v" id="tp">—</div></div></div><p class="note" id="nt"></p></section>
+<div class="ad-slot"></div>
+<section class="card promo" id="promo" hidden></section>
+<article>
+<h2>Why minimum payments cost so much</h2>
+<p>Credit card APRs are high, so when you only pay a little more than the interest each month, most of your payment never touches the balance. Increasing your payment even slightly can cut years off the debt.</p>
+<h2>Ways to pay off faster</h2>
+<ul><li>Pay a fixed amount rather than the shrinking minimum.</li><li>Consider a 0% balance transfer card (watch the transfer fee and the end date).</li><li>With several debts, use our debt payoff calculator to compare snowball and avalanche strategies.</li></ul>
+</article>
+<h2>Frequently asked questions</h2>
+<details><summary>How is monthly interest calculated from APR?</summary><p>This calculator converts the APR to an equivalent monthly rate. Card issuers&#x27; exact methods vary slightly (e.g. daily balances), so treat results as close estimates.</p></details>
+<div class="ad-slot"></div>
+<h2>More free calculators</h2>
+<div class="tools"><a href="../compound-interest-calculator/"><strong>Compound Interest Calculator</strong><span>See how savings and investments grow with regular contributions.</span></a><a href="../mortgage-calculator/"><strong>Mortgage & Loan Repayment Calculator</strong><span>Monthly payments, total interest and the effect of overpaying.</span></a><a href="../savings-goal-calculator/"><strong>Savings Goal Calculator</strong><span>How much to save each month to hit a target by a deadline.</span></a><a href="../fire-calculator/"><strong>FIRE Calculator</strong><span>Your FI number and how many years until you can retire.</span></a><a href="../inflation-calculator/"><strong>Inflation Calculator</strong><span>What your money will be worth in the future.</span></a><a href="../percentage-calculator/"><strong>Percentage Calculator</strong><span>Percent of, what percent, and percentage change.</span></a><a href="../uk-take-home-pay-calculator/"><strong>UK Take-Home Pay Calculator (2026/27)</strong><span>Salary after income tax, NI and pension.</span></a><a href="../stamp-duty-calculator/"><strong>Stamp Duty Calculator</strong><span>SDLT for movers, first-time buyers and second homes.</span></a><a href="../debt-payoff-calculator/"><strong>Debt Payoff Calculator</strong><span>Compare snowball and avalanche debt strategies.</span></a><a href="../salary-converter/"><strong>Salary Converter</strong><span>Convert between hourly, daily, monthly and annual pay.</span></a><a href="../vat-calculator/"><strong>VAT Calculator</strong><span>Add or remove VAT at any rate.</span></a><a href="../pension-calculator/"><strong>Pension Calculator</strong><span>Estimate your pension pot at retirement.</span></a><a href="../investment-return-calculator/"><strong>Investment Return (CAGR) Calculator</strong><span>Total return, CAGR and doubling time.</span></a><a href="../profit-margin-calculator/"><strong>Profit Margin & Markup Calculator</strong><span>Profit, margin and markup from cost and price.</span></a><a href="../budget-calculator/"><strong>50/30/20 Budget Calculator</strong><span>Split income into needs, wants and savings.</span></a><a href="../emergency-fund-calculator/"><strong>Emergency Fund Calculator</strong><span>How big your rainy-day fund should be.</span></a><a href="../freelance-rate-calculator/"><strong>Freelance Day Rate Calculator</strong><span>The day rate you need to hit your income target.</span></a></div>
+<script>document.addEventListener("DOMContentLoaded", () => {
+App.bind(() => {
+  const B = App.val("b"), i = Math.pow(1 + App.val("r") / 100, 1 / 12) - 1, M = App.val("m");
+  if (M <= B * i) {
+    App.set("mo", "Never"); App.set("ti", "—"); App.set("tp", "—");
+    App.set("nt", `Your payment doesn't cover the monthly interest (${App.money(B * i, 2)}). Pay more to reduce the balance.`);
+    return;
+  }
+  let bal = B, n = 0, int = 0;
+  while (bal > 0.005 && n < 1200) { const x = bal * i; int += x; bal = bal + x - M; n++; }
+  App.set("mo", `${Math.floor(n / 12)} yrs ${n % 12} mo`); App.set("ti", App.money(int)); App.set("tp", App.money(B + int));
+  App.set("nt", "Tip: moving the balance to a 0% balance-transfer card could save most of this interest.");
+});
+});</script>
+</main>
+<footer class="site"><div class="wrap">
+<p><a href="../compound-interest-calculator/">Compound Interest Calculator</a> · <a href="../mortgage-calculator/">Mortgage & Loan Repayment Calculator</a> · <a href="../savings-goal-calculator/">Savings Goal Calculator</a> · <a href="../fire-calculator/">FIRE Calculator</a> · <a href="../inflation-calculator/">Inflation Calculator</a> · <a href="../percentage-calculator/">Percentage Calculator</a> · <a href="../uk-take-home-pay-calculator/">UK Take-Home Pay Calculator (2026/27)</a> · <a href="../stamp-duty-calculator/">Stamp Duty Calculator</a> · <a href="../credit-card-payoff-calculator/">Credit Card Payoff Calculator</a> · <a href="../debt-payoff-calculator/">Debt Payoff Calculator</a> · <a href="../salary-converter/">Salary Converter</a> · <a href="../vat-calculator/">VAT Calculator</a> · <a href="../pension-calculator/">Pension Calculator</a> · <a href="../investment-return-calculator/">Investment Return (CAGR) Calculator</a> · <a href="../profit-margin-calculator/">Profit Margin & Markup Calculator</a> · <a href="../budget-calculator/">50/30/20 Budget Calculator</a> · <a href="../emergency-fund-calculator/">Emergency Fund Calculator</a> · <a href="../freelance-rate-calculator/">Freelance Day Rate Calculator</a></p>
+<p>Calculations run entirely in your browser — nothing is stored or sent. Results are estimates for educational purposes, not financial advice. <a href="../privacy.html">Privacy</a></p>
+</div></footer>
+<script src="../assets/config.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>
