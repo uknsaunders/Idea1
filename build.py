@@ -794,6 +794,7 @@ def build():
     tools = "".join(f'<a href="{p["slug"]}/"><strong>{p["h1"].split(":")[0]}</strong><span>{p["blurb"]}</span></a>' for p in PAGES)
     home = f"""<h1>Free money calculators</h1>
 <p class="lede">Fast, private, no-sign-up calculators for savings, loans, mortgages, retirement and more. Everything runs in your browser.</p>
+<a class="banner" href="daily/"><strong>🎯 New: Daily Target</strong><br>A free numbers puzzle — a new one every day. Can you hit the target?</a>
 <div class="tools">{tools}</div>
 <div class="ad-slot"></div>
 <section class="card promo" id="promo" hidden></section>
@@ -803,6 +804,34 @@ def build():
                                            "Free, private finance calculators: UK take-home pay, stamp duty, mortgage, compound interest, pension, debt payoff, budgeting and more. No sign-up.",
                                            "", home))
 
+
+    game = """<h1>Daily Target</h1>
+<p class="lede">A new numbers puzzle every day. Combine the six numbers using + − × ÷ to hit the target. Each number can be used once.</p>
+<section class="card game">
+<div class="note"><span id="num"></span> · <span id="next"></span></div>
+<div class="target" id="target">—</div>
+<div class="tiles" id="tiles"></div>
+<div class="ops"><button class="op" data-op="+">+</button><button class="op" data-op="−">−</button><button class="op" data-op="×">×</button><button class="op" data-op="÷">÷</button></div>
+<div class="controls"><button id="undo">↶ Undo</button><button id="reset">Start over</button><button id="submit">Submit</button></div>
+<pre id="log"></pre>
+<div id="result" hidden><div id="stars"></div><p id="verdict" style="font-weight:700;margin:6px 0"></p><pre id="working"></pre><p id="streak"></p>
+<button id="share">Share result</button></div>
+<p class="note" id="archive"></p>
+</section>
+<div class="ad-slot"></div>
+<section class="card promo" id="promo" hidden></section>
+<h2>How to play</h2>
+<ul><li>Tap a number, then an operation, then a second number. The two combine into a new number you can keep using.</li>
+<li>Only whole, positive results are allowed.</li>
+<li>Hit the target exactly for ⭐⭐⭐, within 5 for ⭐⭐, within 10 for ⭐.</li>
+<li>Every puzzle has at least one exact solution. Everyone gets the same puzzle each day, so share your result and challenge friends!</li></ul>
+<h2>Warm up with our calculators</h2>
+<div class="tools">""" + "".join(f'<a href="../{o["slug"]}/"><strong>{o["h1"].split(":")[0]}</strong><span>{o["blurb"]}</span></a>' for o in PAGES[:6]) + "</div>"
+    (OUT / "daily").mkdir(exist_ok=True)
+    (OUT / "daily" / "index.html").write_text(
+        layout("Daily Target — Free Daily Numbers Puzzle", "A free daily numbers puzzle: combine six numbers with + − × ÷ to hit the target. New puzzle every day — share your score.", "daily/", game)
+        .replace("</body>", '<script src="../assets/daily.js"></script>\n</body>'))
+
     privacy = """<h1>Privacy</h1>
 <p>All calculations happen in your browser. We don't collect, store or transmit the numbers you enter.</p>
 <p>We may count anonymous page visits with a cookie-free analytics service (Cloudflare Web Analytics or GoatCounter) to see which pages are useful. No personal data is collected.</p>
@@ -811,7 +840,7 @@ def build():
 <p>Some links may be affiliate links, meaning we may earn a commission at no extra cost to you.</p>"""
     (OUT / "privacy.html").write_text(layout("Privacy Policy", "Privacy policy for MoneyMath free calculators.", "", privacy))
 
-    urls = [""] + [f"{p['slug']}/" for p in PAGES] + ["privacy.html"]
+    urls = ["", "daily/"] + [f"{p['slug']}/" for p in PAGES] + ["privacy.html"]
     (OUT / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
         + "".join(f"  <url><loc>{SITE_URL}/{u}</loc><lastmod>{today}</lastmod></url>\n" for u in urls)
