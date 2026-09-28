@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://uknsaunders.github.io/Idea1/sitemap.xml

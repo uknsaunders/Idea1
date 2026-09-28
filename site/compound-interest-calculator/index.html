@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compound Interest Calculator — with Monthly Contributions | MoneyMath</title>
+<meta name="description" content="Free compound interest calculator with monthly contributions. See how your savings or investments grow year by year, with a chart and full breakdown.">
+<link rel="canonical" href="https://uknsaunders.github.io/Idea1/compound-interest-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Compound Interest Calculator — with Monthly Contributions">
+<meta property="og:description" content="Free compound interest calculator with monthly contributions. See how your savings or investments grow year by year, with a chart and full breakdown.">
+<meta property="og:url" content="https://uknsaunders.github.io/Idea1/compound-interest-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💷</text></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Compound Interest Calculator", "url": "https://uknsaunders.github.io/Idea1/compound-interest-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is a realistic interest rate to use?", "acceptedAnswer": {"@type": "Answer", "text": "Savings accounts typically pay 1\u20135%. Long-term stock market returns have historically averaged around 7% a year after inflation, but returns are never guaranteed."}}, {"@type": "Question", "name": "Does compounding frequency matter much?", "acceptedAnswer": {"@type": "Answer", "text": "A little. Daily compounding beats yearly compounding, but the difference is small compared with the effect of the rate and the number of years."}}, {"@type": "Question", "name": "Is this calculator free?", "acceptedAnswer": {"@type": "Answer", "text": "Yes \u2014 completely free, with no sign-up. Everything is calculated in your browser and nothing is stored or sent anywhere."}}]}</script>
+</head>
+<body>
+<header class="site"><div class="wrap">
+<a class="brand" href="../">Money<span>Math</span></a>
+<label style="margin:0;font-weight:400">Currency <select id="currency" aria-label="Currency"></select></label>
+</div></header>
+<main class="wrap">
+<h1>Compound Interest Calculator</h1>
+<p class="lede">Free compound interest calculator with monthly contributions. See how your savings or investments grow year by year, with a chart and full breakdown.</p>
+<section class="card"><div class="grid"><div><label for="p">Starting amount</label><input id="p" type="number" inputmode="decimal" step="any" value="10000"></div><div><label for="m">Monthly contribution</label><input id="m" type="number" inputmode="decimal" step="any" value="250"></div><div><label for="r">Annual interest rate (%)</label><input id="r" type="number" inputmode="decimal" step="any" value="7"></div><div><label for="y">Years</label><input id="y" type="number" inputmode="decimal" step="1" value="20"></div><div><label for="c">Compounding</label><select class="field" id="c"><option value="12" selected>Monthly</option><option value="4">Quarterly</option><option value="1">Yearly</option><option value="365">Daily</option></select></div></div><div class="results"><div class="stat"><div class="k">Final balance</div><div class="v" id="fv">—</div></div><div class="stat"><div class="k">Total contributed</div><div class="v" id="tc">—</div></div><div class="stat"><div class="k">Total interest earned</div><div class="v" id="ti">—</div></div></div><div class="chart" id="chart"></div><div class="table-wrap"><table><thead><tr><th>Year</th><th>Contributed</th><th>Interest</th><th>Balance</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+<div class="ad-slot"></div>
+<section class="card promo" id="promo" hidden></section>
+<article>
+<h2>How compound interest works</h2>
+<p>Compound interest means you earn interest on your interest. Each period, the interest you earned is added to your balance, so the next period's interest is calculated on a bigger number. Over long periods this snowball effect becomes the main driver of growth — often more than the money you put in yourself.</p>
+<h2>The formula</h2>
+<p>For a lump sum: <code>A = P × (1 + r/n)<sup>n×t</sup></code>, where <em>P</em> is the starting amount, <em>r</em> the annual rate, <em>n</em> the number of compounding periods per year and <em>t</em> the number of years. This calculator also adds your monthly contributions and compounds them at the same effective rate.</p>
+<h2>Tips for making compounding work for you</h2>
+<ul>
+<li><strong>Start early.</strong> Time is the most powerful variable — try changing the years above and watch the interest bar grow.</li>
+<li><strong>Contribute regularly.</strong> Small, automatic monthly contributions add up dramatically.</li>
+<li><strong>Keep fees low.</strong> A 1% annual fee reduces your effective rate by 1% every single year.</li>
+</ul>
+</article>
+<h2>Frequently asked questions</h2>
+<details><summary>What is a realistic interest rate to use?</summary><p>Savings accounts typically pay 1–5%. Long-term stock market returns have historically averaged around 7% a year after inflation, but returns are never guaranteed.</p></details><details><summary>Does compounding frequency matter much?</summary><p>A little. Daily compounding beats yearly compounding, but the difference is small compared with the effect of the rate and the number of years.</p></details><details><summary>Is this calculator free?</summary><p>Yes — completely free, with no sign-up. Everything is calculated in your browser and nothing is stored or sent anywhere.</p></details>
+<div class="ad-slot"></div>
+<h2>More free calculators</h2>
+<div class="tools"><a href="../mortgage-calculator/"><strong>Mortgage & Loan Repayment Calculator</strong><span>Monthly payments, total interest and the effect of overpaying.</span></a><a href="../savings-goal-calculator/"><strong>Savings Goal Calculator</strong><span>How much to save each month to hit a target by a deadline.</span></a><a href="../fire-calculator/"><strong>FIRE Calculator</strong><span>Your FI number and how many years until you can retire.</span></a><a href="../inflation-calculator/"><strong>Inflation Calculator</strong><span>What your money will be worth in the future.</span></a><a href="../percentage-calculator/"><strong>Percentage Calculator</strong><span>Percent of, what percent, and percentage change.</span></a></div>
+<script>document.addEventListener("DOMContentLoaded", () => {
+App.bind(() => {
+  const P = App.val("p"), M = App.val("m"), r = App.val("r") / 100, Y = Math.round(App.val("y"));
+  const n = parseFloat(document.getElementById("c").value);
+  const monthly = Math.pow(1 + r / n, n / 12) - 1;   // effective monthly rate
+  let bal = P, contrib = P; const labels = [], cs = [], is = []; let rows = "";
+  for (let yr = 1; yr <= Y; yr++) {
+    for (let mo = 0; mo < 12; mo++) { bal = bal * (1 + monthly) + M; contrib += M; }
+    labels.push(yr); cs.push(contrib); is.push(bal - contrib);
+    rows += `<tr><td>${yr}</td><td>${App.money(contrib)}</td><td>${App.money(bal - contrib)}</td><td>${App.money(bal)}</td></tr>`;
+  }
+  App.set("fv", App.money(bal)); App.set("tc", App.money(contrib)); App.set("ti", App.money(bal - contrib));
+  document.getElementById("rows").innerHTML = rows;
+  App.chart(document.getElementById("chart"), labels, [
+    { label: "Contributions", color: "var(--accent-2)", values: cs },
+    { label: "Interest", color: "var(--accent)", values: is },
+  ]);
+});
+});</script>
+</main>
+<footer class="site"><div class="wrap">
+<p><a href="../compound-interest-calculator/">Compound Interest Calculator</a> · <a href="../mortgage-calculator/">Mortgage & Loan Repayment Calculator</a> · <a href="../savings-goal-calculator/">Savings Goal Calculator</a> · <a href="../fire-calculator/">FIRE Calculator</a> · <a href="../inflation-calculator/">Inflation Calculator</a> · <a href="../percentage-calculator/">Percentage Calculator</a></p>
+<p>Calculations run entirely in your browser — nothing is stored or sent. Results are estimates for educational purposes, not financial advice. <a href="../privacy.html">Privacy</a></p>
+</div></footer>
+<script src="../assets/config.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

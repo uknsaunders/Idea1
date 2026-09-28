@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FIRE Calculator — When Can I Retire Early? | MoneyMath</title>
+<meta name="description" content="Free FIRE (Financial Independence, Retire Early) calculator. Find your FI number and how many years until your investments can cover your spending.">
+<link rel="canonical" href="https://uknsaunders.github.io/Idea1/fire-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="FIRE Calculator — When Can I Retire Early?">
+<meta property="og:description" content="Free FIRE (Financial Independence, Retire Early) calculator. Find your FI number and how many years until your investments can cover your spending.">
+<meta property="og:url" content="https://uknsaunders.github.io/Idea1/fire-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💷</text></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "FIRE Calculator: When Can You Retire?", "url": "https://uknsaunders.github.io/Idea1/fire-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Why use a 'real' return?", "acceptedAnswer": {"@type": "Answer", "text": "A real return is after inflation. Using it keeps every number in today's money, so your FI number stays meaningful."}}, {"@type": "Question", "name": "Is the 4% rule guaranteed?", "acceptedAnswer": {"@type": "Answer", "text": "No. It's based on historical returns and future markets may differ. Treat this as a planning estimate, not financial advice."}}]}</script>
+</head>
+<body>
+<header class="site"><div class="wrap">
+<a class="brand" href="../">Money<span>Math</span></a>
+<label style="margin:0;font-weight:400">Currency <select id="currency" aria-label="Currency"></select></label>
+</div></header>
+<main class="wrap">
+<h1>FIRE Calculator: When Can You Retire?</h1>
+<p class="lede">Free FIRE (Financial Independence, Retire Early) calculator. Find your FI number and how many years until your investments can cover your spending.</p>
+<section class="card"><div class="grid"><div><label for="sp">Annual spending in retirement</label><input id="sp" type="number" inputmode="decimal" step="any" value="30000"></div><div><label for="inv">Currently invested</label><input id="inv" type="number" inputmode="decimal" step="any" value="50000"></div><div><label for="sv">Amount invested per year</label><input id="sv" type="number" inputmode="decimal" step="any" value="15000"></div><div><label for="r">Expected real return (%)</label><input id="r" type="number" inputmode="decimal" step="any" value="5"></div><div><label for="w">Safe withdrawal rate (%)</label><input id="w" type="number" inputmode="decimal" step="any" value="4"></div></div><div class="results"><div class="stat"><div class="k">Your FI number</div><div class="v" id="fi">—</div></div><div class="stat"><div class="k">Years to financial independence</div><div class="v" id="yrs">—</div></div><div class="stat"><div class="k">Progress so far</div><div class="v" id="pct">—</div></div></div><div class="chart" id="chart"></div></section>
+<div class="ad-slot"></div>
+<section class="card promo" id="promo" hidden></section>
+<article>
+<h2>What is FIRE?</h2>
+<p>FIRE stands for Financial Independence, Retire Early. The idea is to save and invest aggressively until your investments are large enough that withdrawals can cover your living costs indefinitely — at which point work becomes optional.</p>
+<h2>Your FI number and the 4% rule</h2>
+<p>Your FI number is your annual spending divided by your safe withdrawal rate. At 4%, that's 25× your annual spending. The 4% rule comes from historical research suggesting a portfolio could sustain that withdrawal rate (adjusted for inflation) for around 30 years. Many early retirees use 3–3.5% for extra safety over longer retirements.</p>
+<h2>The biggest lever: your savings rate</h2>
+<p>Cutting spending helps twice: you save more each year <em>and</em> your FI number gets smaller. Try lowering the spending figure above to see the effect.</p>
+</article>
+<h2>Frequently asked questions</h2>
+<details><summary>Why use a &#x27;real&#x27; return?</summary><p>A real return is after inflation. Using it keeps every number in today&#x27;s money, so your FI number stays meaningful.</p></details><details><summary>Is the 4% rule guaranteed?</summary><p>No. It&#x27;s based on historical returns and future markets may differ. Treat this as a planning estimate, not financial advice.</p></details>
+<div class="ad-slot"></div>
+<h2>More free calculators</h2>
+<div class="tools"><a href="../compound-interest-calculator/"><strong>Compound Interest Calculator</strong><span>See how savings and investments grow with regular contributions.</span></a><a href="../mortgage-calculator/"><strong>Mortgage & Loan Repayment Calculator</strong><span>Monthly payments, total interest and the effect of overpaying.</span></a><a href="../savings-goal-calculator/"><strong>Savings Goal Calculator</strong><span>How much to save each month to hit a target by a deadline.</span></a><a href="../inflation-calculator/"><strong>Inflation Calculator</strong><span>What your money will be worth in the future.</span></a><a href="../percentage-calculator/"><strong>Percentage Calculator</strong><span>Percent of, what percent, and percentage change.</span></a></div>
+<script>document.addEventListener("DOMContentLoaded", () => {
+App.bind(() => {
+  const sp = App.val("sp"), inv = App.val("inv"), sv = App.val("sv"), r = App.val("r") / 100, w = App.val("w") / 100;
+  if (w <= 0) return;
+  const target = sp / w;
+  let bal = inv, yr = 0; const labels = [], vals = [];
+  while (bal < target && yr < 100) { bal = bal * (1 + r) + sv; yr++; labels.push(yr); vals.push(bal); }
+  App.set("fi", App.money(target));
+  App.set("yrs", bal >= target ? (yr === 0 ? "You're there!" : `${yr} years`) : "100+ years");
+  App.set("pct", `${App.num(Math.min(100, inv / target * 100), 1)}%`);
+  App.chart(document.getElementById("chart"), labels, [
+    { label: "Portfolio", color: "var(--accent)", values: vals.map((v) => Math.min(v, target)) },
+    { label: "Remaining to FI", color: "var(--accent-2)", values: vals.map((v) => Math.max(0, target - v)) },
+  ]);
+});
+});</script>
+</main>
+<footer class="site"><div class="wrap">
+<p><a href="../compound-interest-calculator/">Compound Interest Calculator</a> · <a href="../mortgage-calculator/">Mortgage & Loan Repayment Calculator</a> · <a href="../savings-goal-calculator/">Savings Goal Calculator</a> · <a href="../fire-calculator/">FIRE Calculator</a> · <a href="../inflation-calculator/">Inflation Calculator</a> · <a href="../percentage-calculator/">Percentage Calculator</a></p>
+<p>Calculations run entirely in your browser — nothing is stored or sent. Results are estimates for educational purposes, not financial advice. <a href="../privacy.html">Privacy</a></p>
+</div></footer>
+<script src="../assets/config.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

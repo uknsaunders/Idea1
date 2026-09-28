@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inflation Calculator — Future Value &amp; Purchasing Power | MoneyMath</title>
+<meta name="description" content="Free inflation calculator. See what money today will be worth in the future, and how much you&#x27;ll need to keep the same purchasing power.">
+<link rel="canonical" href="https://uknsaunders.github.io/Idea1/inflation-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Inflation Calculator — Future Value &amp; Purchasing Power">
+<meta property="og:description" content="Free inflation calculator. See what money today will be worth in the future, and how much you&#x27;ll need to keep the same purchasing power.">
+<meta property="og:url" content="https://uknsaunders.github.io/Idea1/inflation-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💷</text></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Inflation Calculator", "url": "https://uknsaunders.github.io/Idea1/inflation-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What inflation rate should I use?", "acceptedAnswer": {"@type": "Answer", "text": "Many central banks target around 2%. The long-run average in most developed economies has been roughly 2\u20134%."}}, {"@type": "Question", "name": "How do I beat inflation?", "acceptedAnswer": {"@type": "Answer", "text": "Your savings or investments need to earn a return higher than the inflation rate. Compare rates using our compound interest calculator."}}]}</script>
+</head>
+<body>
+<header class="site"><div class="wrap">
+<a class="brand" href="../">Money<span>Math</span></a>
+<label style="margin:0;font-weight:400">Currency <select id="currency" aria-label="Currency"></select></label>
+</div></header>
+<main class="wrap">
+<h1>Inflation Calculator</h1>
+<p class="lede">Free inflation calculator. See what money today will be worth in the future, and how much you&#x27;ll need to keep the same purchasing power.</p>
+<section class="card"><div class="grid"><div><label for="a">Amount today</label><input id="a" type="number" inputmode="decimal" step="any" value="1000"></div><div><label for="r">Average inflation rate (%)</label><input id="r" type="number" inputmode="decimal" step="any" value="3"></div><div><label for="y">Years</label><input id="y" type="number" inputmode="decimal" step="1" value="10"></div></div><div class="results"><div class="stat"><div class="k">Cost of the same things in future</div><div class="v" id="need">—</div></div><div class="stat"><div class="k">What today's money will buy</div><div class="v" id="worth">—</div></div><div class="stat"><div class="k">Purchasing power lost</div><div class="v" id="loss">—</div></div></div></section>
+<div class="ad-slot"></div>
+<section class="card promo" id="promo" hidden></section>
+<article>
+<h2>How inflation erodes your money</h2>
+<p>Inflation is the general rise in prices over time. If prices rise 3% a year, something costing 1,000 today costs about 1,344 in ten years — and 1,000 kept in cash will only buy about 744 worth of today's goods. That's why cash savings earning less than inflation lose real value.</p>
+<h2>The formula</h2>
+<p>Future cost = amount × (1 + inflation)<sup>years</sup>. Purchasing power = amount ÷ (1 + inflation)<sup>years</sup>.</p>
+</article>
+<h2>Frequently asked questions</h2>
+<details><summary>What inflation rate should I use?</summary><p>Many central banks target around 2%. The long-run average in most developed economies has been roughly 2–4%.</p></details><details><summary>How do I beat inflation?</summary><p>Your savings or investments need to earn a return higher than the inflation rate. Compare rates using our compound interest calculator.</p></details>
+<div class="ad-slot"></div>
+<h2>More free calculators</h2>
+<div class="tools"><a href="../compound-interest-calculator/"><strong>Compound Interest Calculator</strong><span>See how savings and investments grow with regular contributions.</span></a><a href="../mortgage-calculator/"><strong>Mortgage & Loan Repayment Calculator</strong><span>Monthly payments, total interest and the effect of overpaying.</span></a><a href="../savings-goal-calculator/"><strong>Savings Goal Calculator</strong><span>How much to save each month to hit a target by a deadline.</span></a><a href="../fire-calculator/"><strong>FIRE Calculator</strong><span>Your FI number and how many years until you can retire.</span></a><a href="../percentage-calculator/"><strong>Percentage Calculator</strong><span>Percent of, what percent, and percentage change.</span></a></div>
+<script>document.addEventListener("DOMContentLoaded", () => {
+App.bind(() => {
+  const a = App.val("a"), r = App.val("r") / 100, y = App.val("y");
+  const f = Math.pow(1 + r, y);
+  App.set("need", App.money(a * f));
+  App.set("worth", App.money(a / f));
+  App.set("loss", `${App.num((1 - 1 / f) * 100, 1)}%`);
+});
+});</script>
+</main>
+<footer class="site"><div class="wrap">
+<p><a href="../compound-interest-calculator/">Compound Interest Calculator</a> · <a href="../mortgage-calculator/">Mortgage & Loan Repayment Calculator</a> · <a href="../savings-goal-calculator/">Savings Goal Calculator</a> · <a href="../fire-calculator/">FIRE Calculator</a> · <a href="../inflation-calculator/">Inflation Calculator</a> · <a href="../percentage-calculator/">Percentage Calculator</a></p>
+<p>Calculations run entirely in your browser — nothing is stored or sent. Results are estimates for educational purposes, not financial advice. <a href="../privacy.html">Privacy</a></p>
+</div></footer>
+<script src="../assets/config.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

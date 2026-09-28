@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Percentage Calculator — Percent of, Change &amp; Increase | MoneyMath</title>
+<meta name="description" content="Free percentage calculator. Work out X% of a number, what percent one number is of another, and percentage increase or decrease.">
+<link rel="canonical" href="https://uknsaunders.github.io/Idea1/percentage-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Percentage Calculator — Percent of, Change &amp; Increase">
+<meta property="og:description" content="Free percentage calculator. Work out X% of a number, what percent one number is of another, and percentage increase or decrease.">
+<meta property="og:url" content="https://uknsaunders.github.io/Idea1/percentage-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💷</text></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Percentage Calculator", "url": "https://uknsaunders.github.io/Idea1/percentage-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How do I add a percentage to a number?", "acceptedAnswer": {"@type": "Answer", "text": "Multiply by (1 + percent/100). For example, 200 plus 15% is 200 \u00d7 1.15 = 230."}}, {"@type": "Question", "name": "Why isn't a 50% drop undone by a 50% rise?", "acceptedAnswer": {"@type": "Answer", "text": "Because the rise is calculated on the smaller number. 100 falls 50% to 50, and 50 rising 50% is only 75."}}]}</script>
+</head>
+<body>
+<header class="site"><div class="wrap">
+<a class="brand" href="../">Money<span>Math</span></a>
+<label style="margin:0;font-weight:400">Currency <select id="currency" aria-label="Currency"></select></label>
+</div></header>
+<main class="wrap">
+<h1>Percentage Calculator</h1>
+<p class="lede">Free percentage calculator. Work out X% of a number, what percent one number is of another, and percentage increase or decrease.</p>
+<section class="card"><h2 style="margin-top:0">What is X% of Y?</h2><div class="grid"><div><label for="a1">Percent (%)</label><input id="a1" type="number" inputmode="decimal" step="any" value="15"></div><div><label for="b1">Of number</label><input id="b1" type="number" inputmode="decimal" step="any" value="200"></div></div><div class="results"><div class="stat"><div class="k">Result</div><div class="v" id="o1">—</div></div></div><h2>X is what percent of Y?</h2><div class="grid"><div><label for="a2">Number</label><input id="a2" type="number" inputmode="decimal" step="any" value="30"></div><div><label for="b2">Of total</label><input id="b2" type="number" inputmode="decimal" step="any" value="120"></div></div><div class="results"><div class="stat"><div class="k">Percentage</div><div class="v" id="o2">—</div></div></div><h2>Percentage change from X to Y</h2><div class="grid"><div><label for="a3">From</label><input id="a3" type="number" inputmode="decimal" step="any" value="80"></div><div><label for="b3">To</label><input id="b3" type="number" inputmode="decimal" step="any" value="100"></div></div><div class="results"><div class="stat"><div class="k">Change</div><div class="v" id="o3">—</div></div></div></section>
+<div class="ad-slot"></div>
+<section class="card promo" id="promo" hidden></section>
+<article>
+<h2>Percentage formulas</h2>
+<ul>
+<li><strong>X% of Y</strong> = X ÷ 100 × Y</li>
+<li><strong>X as a percent of Y</strong> = X ÷ Y × 100</li>
+<li><strong>Percentage change</strong> = (new − old) ÷ old × 100</li>
+</ul>
+<p>Common uses: discounts and sale prices, tips, VAT and sales tax, pay rises, investment returns and exam scores.</p>
+</article>
+<h2>Frequently asked questions</h2>
+<details><summary>How do I add a percentage to a number?</summary><p>Multiply by (1 + percent/100). For example, 200 plus 15% is 200 × 1.15 = 230.</p></details><details><summary>Why isn&#x27;t a 50% drop undone by a 50% rise?</summary><p>Because the rise is calculated on the smaller number. 100 falls 50% to 50, and 50 rising 50% is only 75.</p></details>
+<div class="ad-slot"></div>
+<h2>More free calculators</h2>
+<div class="tools"><a href="../compound-interest-calculator/"><strong>Compound Interest Calculator</strong><span>See how savings and investments grow with regular contributions.</span></a><a href="../mortgage-calculator/"><strong>Mortgage & Loan Repayment Calculator</strong><span>Monthly payments, total interest and the effect of overpaying.</span></a><a href="../savings-goal-calculator/"><strong>Savings Goal Calculator</strong><span>How much to save each month to hit a target by a deadline.</span></a><a href="../fire-calculator/"><strong>FIRE Calculator</strong><span>Your FI number and how many years until you can retire.</span></a><a href="../inflation-calculator/"><strong>Inflation Calculator</strong><span>What your money will be worth in the future.</span></a></div>
+<script>document.addEventListener("DOMContentLoaded", () => {
+App.bind(() => {
+  App.set("o1", App.num(App.val("a1") / 100 * App.val("b1"), 4));
+  const b2 = App.val("b2"); App.set("o2", b2 ? `${App.num(App.val("a2") / b2 * 100, 4)}%` : "—");
+  const a3 = App.val("a3"), ch = a3 ? (App.val("b3") - a3) / Math.abs(a3) * 100 : NaN;
+  App.set("o3", isFinite(ch) ? `${ch >= 0 ? "+" : ""}${App.num(ch, 4)}%` : "—");
+});
+});</script>
+</main>
+<footer class="site"><div class="wrap">
+<p><a href="../compound-interest-calculator/">Compound Interest Calculator</a> · <a href="../mortgage-calculator/">Mortgage & Loan Repayment Calculator</a> · <a href="../savings-goal-calculator/">Savings Goal Calculator</a> · <a href="../fire-calculator/">FIRE Calculator</a> · <a href="../inflation-calculator/">Inflation Calculator</a> · <a href="../percentage-calculator/">Percentage Calculator</a></p>
+<p>Calculations run entirely in your browser — nothing is stored or sent. Results are estimates for educational purposes, not financial advice. <a href="../privacy.html">Privacy</a></p>
+</div></footer>
+<script src="../assets/config.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

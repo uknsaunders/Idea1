@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Savings Goal Calculator — How Much to Save Each Month | MoneyMath</title>
+<meta name="description" content="Free savings goal calculator. Find out how much you need to save each month to reach your target by a set date, including interest.">
+<link rel="canonical" href="https://uknsaunders.github.io/Idea1/savings-goal-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Savings Goal Calculator — How Much to Save Each Month">
+<meta property="og:description" content="Free savings goal calculator. Find out how much you need to save each month to reach your target by a set date, including interest.">
+<meta property="og:url" content="https://uknsaunders.github.io/Idea1/savings-goal-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💷</text></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Savings Goal Calculator", "url": "https://uknsaunders.github.io/Idea1/savings-goal-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Where should I keep short-term savings?", "acceptedAnswer": {"@type": "Answer", "text": "For goals under ~5 years, most people use easy-access or fixed-term savings accounts rather than investments, because the value won't fall."}}, {"@type": "Question", "name": "What if I already have enough?", "acceptedAnswer": {"@type": "Answer", "text": "If your current savings plus interest reach the goal on their own, the monthly amount shows as zero."}}]}</script>
+</head>
+<body>
+<header class="site"><div class="wrap">
+<a class="brand" href="../">Money<span>Math</span></a>
+<label style="margin:0;font-weight:400">Currency <select id="currency" aria-label="Currency"></select></label>
+</div></header>
+<main class="wrap">
+<h1>Savings Goal Calculator</h1>
+<p class="lede">Free savings goal calculator. Find out how much you need to save each month to reach your target by a set date, including interest.</p>
+<section class="card"><div class="grid"><div><label for="g">Savings goal</label><input id="g" type="number" inputmode="decimal" step="any" value="20000"></div><div><label for="s">Already saved</label><input id="s" type="number" inputmode="decimal" step="any" value="2000"></div><div><label for="r">Interest rate (%)</label><input id="r" type="number" inputmode="decimal" step="any" value="4"></div><div><label for="y">Years to reach goal</label><input id="y" type="number" inputmode="decimal" step="0.5" value="3"></div></div><div class="results"><div class="stat"><div class="k">Save each month</div><div class="v" id="pm">—</div></div><div class="stat"><div class="k">…or each week</div><div class="v" id="pw">—</div></div><div class="stat"><div class="k">Interest earned</div><div class="v" id="ti">—</div></div></div></section>
+<div class="ad-slot"></div>
+<section class="card promo" id="promo" hidden></section>
+<article>
+<h2>How it works</h2>
+<p>The calculator works backwards from your goal. It grows what you've already saved at your interest rate, then works out the fixed monthly deposit that closes the gap by your deadline, using the future-value-of-an-annuity formula.</p>
+<h2>Ideas for common goals</h2>
+<ul><li>Emergency fund: 3–6 months of essential spending.</li><li>House deposit: typically 5–20% of the property price.</li><li>Holiday, wedding or car: pick the date, then automate the monthly amount on payday.</li></ul>
+</article>
+<h2>Frequently asked questions</h2>
+<details><summary>Where should I keep short-term savings?</summary><p>For goals under ~5 years, most people use easy-access or fixed-term savings accounts rather than investments, because the value won&#x27;t fall.</p></details><details><summary>What if I already have enough?</summary><p>If your current savings plus interest reach the goal on their own, the monthly amount shows as zero.</p></details>
+<div class="ad-slot"></div>
+<h2>More free calculators</h2>
+<div class="tools"><a href="../compound-interest-calculator/"><strong>Compound Interest Calculator</strong><span>See how savings and investments grow with regular contributions.</span></a><a href="../mortgage-calculator/"><strong>Mortgage & Loan Repayment Calculator</strong><span>Monthly payments, total interest and the effect of overpaying.</span></a><a href="../fire-calculator/"><strong>FIRE Calculator</strong><span>Your FI number and how many years until you can retire.</span></a><a href="../inflation-calculator/"><strong>Inflation Calculator</strong><span>What your money will be worth in the future.</span></a><a href="../percentage-calculator/"><strong>Percentage Calculator</strong><span>Percent of, what percent, and percentage change.</span></a></div>
+<script>document.addEventListener("DOMContentLoaded", () => {
+App.bind(() => {
+  const G = App.val("g"), S = App.val("s"), i = App.val("r") / 100 / 12, N = Math.max(1, Math.round(App.val("y") * 12));
+  const grow = Math.pow(1 + i, N);
+  const need = G - S * grow;
+  const pm = need <= 0 ? 0 : (i === 0 ? need / N : need * i / (grow - 1));
+  App.set("pm", App.money(pm, 2));
+  App.set("pw", App.money(pm * 12 / 52, 2));
+  App.set("ti", App.money(Math.max(0, G - S - pm * N)));
+});
+});</script>
+</main>
+<footer class="site"><div class="wrap">
+<p><a href="../compound-interest-calculator/">Compound Interest Calculator</a> · <a href="../mortgage-calculator/">Mortgage & Loan Repayment Calculator</a> · <a href="../savings-goal-calculator/">Savings Goal Calculator</a> · <a href="../fire-calculator/">FIRE Calculator</a> · <a href="../inflation-calculator/">Inflation Calculator</a> · <a href="../percentage-calculator/">Percentage Calculator</a></p>
+<p>Calculations run entirely in your browser — nothing is stored or sent. Results are estimates for educational purposes, not financial advice. <a href="../privacy.html">Privacy</a></p>
+</div></footer>
+<script src="../assets/config.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>

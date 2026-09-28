@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mortgage &amp; Loan Repayment Calculator — Monthly Payments | MoneyMath</title>
+<meta name="description" content="Free mortgage and loan calculator. Work out your monthly repayment, total interest and see how overpayments shorten your loan, with an amortisation schedule.">
+<link rel="canonical" href="https://uknsaunders.github.io/Idea1/mortgage-calculator/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mortgage &amp; Loan Repayment Calculator — Monthly Payments">
+<meta property="og:description" content="Free mortgage and loan calculator. Work out your monthly repayment, total interest and see how overpayments shorten your loan, with an amortisation schedule.">
+<meta property="og:url" content="https://uknsaunders.github.io/Idea1/mortgage-calculator/">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💷</text></svg>">
+<link rel="stylesheet" href="../assets/style.css">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Mortgage & Loan Repayment Calculator", "url": "https://uknsaunders.github.io/Idea1/mortgage-calculator/", "applicationCategory": "FinanceApplication", "operatingSystem": "Any", "offers": {"@type": "Offer", "price": "0"}}</script><script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Does this work for car loans and personal loans?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. Any fixed-rate loan with equal monthly payments works the same way \u2014 just enter the amount, rate and term."}}, {"@type": "Question", "name": "Does this include taxes, insurance or fees?", "acceptedAnswer": {"@type": "Answer", "text": "No. It calculates principal and interest only. Add property taxes, insurance and any lender fees on top."}}, {"@type": "Question", "name": "What is an amortisation schedule?", "acceptedAnswer": {"@type": "Answer", "text": "It's the breakdown of each payment into interest and principal over the life of the loan. The table above shows it by year."}}]}</script>
+</head>
+<body>
+<header class="site"><div class="wrap">
+<a class="brand" href="../">Money<span>Math</span></a>
+<label style="margin:0;font-weight:400">Currency <select id="currency" aria-label="Currency"></select></label>
+</div></header>
+<main class="wrap">
+<h1>Mortgage & Loan Repayment Calculator</h1>
+<p class="lede">Free mortgage and loan calculator. Work out your monthly repayment, total interest and see how overpayments shorten your loan, with an amortisation schedule.</p>
+<section class="card"><div class="grid"><div><label for="a">Loan amount</label><input id="a" type="number" inputmode="decimal" step="any" value="250000"></div><div><label for="r">Interest rate (%)</label><input id="r" type="number" inputmode="decimal" step="any" value="4.5"></div><div><label for="y">Term (years)</label><input id="y" type="number" inputmode="decimal" step="1" value="25"></div><div><label for="x">Extra monthly overpayment</label><input id="x" type="number" inputmode="decimal" step="any" value="0"></div></div><div class="results"><div class="stat"><div class="k">Monthly payment</div><div class="v" id="pm">—</div></div><div class="stat"><div class="k">Total interest</div><div class="v" id="ti">—</div></div><div class="stat"><div class="k">Total repaid</div><div class="v" id="tp">—</div></div><div class="stat"><div class="k">Paid off in</div><div class="v" id="tm">—</div></div></div><p class="note" id="saved"></p><div class="chart" id="chart"></div><div class="table-wrap"><table><thead><tr><th>Year</th><th>Principal paid</th><th>Interest paid</th><th>Balance left</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+<div class="ad-slot"></div>
+<section class="card promo" id="promo" hidden></section>
+<article>
+<h2>How repayments are calculated</h2>
+<p>A standard repayment (amortising) loan has a fixed monthly payment: <code>M = P × i / (1 − (1 + i)<sup>−n</sup>)</code>, where <em>P</em> is the loan amount, <em>i</em> the monthly interest rate and <em>n</em> the number of monthly payments. Early on, most of each payment is interest; later, most of it pays down the balance — the chart above shows this shift.</p>
+<h2>Why overpaying is so powerful</h2>
+<p>Every extra payment goes straight to the balance, so you stop paying interest on that money for the rest of the term. Even a small monthly overpayment can take years off a mortgage. Check whether your lender charges early repayment fees before overpaying.</p>
+</article>
+<h2>Frequently asked questions</h2>
+<details><summary>Does this work for car loans and personal loans?</summary><p>Yes. Any fixed-rate loan with equal monthly payments works the same way — just enter the amount, rate and term.</p></details><details><summary>Does this include taxes, insurance or fees?</summary><p>No. It calculates principal and interest only. Add property taxes, insurance and any lender fees on top.</p></details><details><summary>What is an amortisation schedule?</summary><p>It&#x27;s the breakdown of each payment into interest and principal over the life of the loan. The table above shows it by year.</p></details>
+<div class="ad-slot"></div>
+<h2>More free calculators</h2>
+<div class="tools"><a href="../compound-interest-calculator/"><strong>Compound Interest Calculator</strong><span>See how savings and investments grow with regular contributions.</span></a><a href="../savings-goal-calculator/"><strong>Savings Goal Calculator</strong><span>How much to save each month to hit a target by a deadline.</span></a><a href="../fire-calculator/"><strong>FIRE Calculator</strong><span>Your FI number and how many years until you can retire.</span></a><a href="../inflation-calculator/"><strong>Inflation Calculator</strong><span>What your money will be worth in the future.</span></a><a href="../percentage-calculator/"><strong>Percentage Calculator</strong><span>Percent of, what percent, and percentage change.</span></a></div>
+<script>document.addEventListener("DOMContentLoaded", () => {
+function run(A, i, N, X) {
+  const pay = i === 0 ? A / N : A * i / (1 - Math.pow(1 + i, -N));
+  let bal = A, months = 0, interest = 0, yp = 0, yi = 0; const yearly = [];
+  while (bal > 0.005 && months < 1200) {
+    const int = bal * i, princ = Math.min(bal, pay + X - int);
+    bal -= princ; interest += int; yp += princ; yi += int; months++;
+    if (months % 12 === 0 || bal <= 0.005) { yearly.push([yp, yi, Math.max(bal, 0)]); yp = yi = 0; }
+  }
+  return { pay, months, interest, yearly };
+}
+App.bind(() => {
+  const A = App.val("a"), i = App.val("r") / 100 / 12, N = Math.round(App.val("y") * 12), X = App.val("x");
+  if (N <= 0) return;
+  const r = run(A, i, N, X), base = run(A, i, N, 0);
+  App.set("pm", App.money(r.pay + X, 2));
+  App.set("ti", App.money(r.interest));
+  App.set("tp", App.money(A + r.interest));
+  App.set("tm", `${Math.floor(r.months / 12)} yrs ${r.months % 12} mo`);
+  App.set("saved", X > 0 ? `Overpaying saves you ${App.money(base.interest - r.interest)} in interest and ${Math.floor((base.months - r.months) / 12)} yrs ${(base.months - r.months) % 12} mo.` : "Tip: try an overpayment to see how much interest you could save.");
+  document.getElementById("rows").innerHTML = r.yearly.map((y, k) => `<tr><td>${k + 1}</td><td>${App.money(y[0])}</td><td>${App.money(y[1])}</td><td>${App.money(y[2])}</td></tr>`).join("");
+  App.chart(document.getElementById("chart"), r.yearly.map((_, k) => k + 1), [
+    { label: "Principal", color: "var(--accent-2)", values: r.yearly.map((y) => y[0]) },
+    { label: "Interest", color: "var(--accent)", values: r.yearly.map((y) => y[1]) },
+  ]);
+});
+});</script>
+</main>
+<footer class="site"><div class="wrap">
+<p><a href="../compound-interest-calculator/">Compound Interest Calculator</a> · <a href="../mortgage-calculator/">Mortgage & Loan Repayment Calculator</a> · <a href="../savings-goal-calculator/">Savings Goal Calculator</a> · <a href="../fire-calculator/">FIRE Calculator</a> · <a href="../inflation-calculator/">Inflation Calculator</a> · <a href="../percentage-calculator/">Percentage Calculator</a></p>
+<p>Calculations run entirely in your browser — nothing is stored or sent. Results are estimates for educational purposes, not financial advice. <a href="../privacy.html">Privacy</a></p>
+</div></footer>
+<script src="../assets/config.js"></script>
+<script src="../assets/app.js"></script>
+</body>
+</html>
